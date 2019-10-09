@@ -1,0 +1,75 @@
+function touchStart(event, ownerInstance) {
+    var dataset = event.instance.getDataset()
+    if (!dataset.leftScrollEnable) return;
+
+    var touches = event.touches;
+    if (touches.length != 1) return;
+
+    // event.instance.getState().scrollX = 0;
+    event.instance.getState().touchX = event.touches[0].pageX;
+}
+
+function touchMove(event, ownerInstance) {
+    var instance = event.instance;
+    var dataset = instance.getDataset()
+    if (!dataset.leftScrollEnable) return;
+
+    var touches = event.touches;
+    if (touches.length != 1) return;
+
+    var state = instance.getState();
+
+    var touchX = state.touchX;
+    var delta = event.touches[0].pageX - touchX
+    state.touchX = event.touches[0].pageX;           // 更新位置
+
+    var menuWidth = dataset.menuWidth;
+    var scrollX = (state.scrollX || 0) + delta;
+    if (scrollX > 0) scrollX = 0
+    else if (scrollX < -menuWidth) scrollX = -menuWidth;
+    if (state.scrollX != scrollX) {
+        state.scrollX = scrollX;
+        instance.setStyle({ "transform": "translateX(" + scrollX + "px)" })
+    }
+    // return false;
+}
+
+function touchEnd(event, ownerInstance) {
+    var instance = event.instance;
+    var dataset = instance.getDataset()
+    if (!dataset.leftScrollEnable) return;
+
+    var menuWidth = dataset.menuWidth;
+
+    var state = instance.getState();
+    var scrollX = state.scrollX;
+
+    /* 动画 */
+    if (Math.abs(scrollX) > Math.abs(menuWidth + scrollX)) {
+        animationMove(instance, -menuWidth)
+    } else {
+        animationMove(instance, 0)
+    }
+}
+
+function setScroll(newValue, oldValue, ownerInstance, instance) {
+    if (newValue == -1) return;
+    animationMove(instance, -newValue)
+}
+
+function animationMove(instance, value) {
+    instance.getState().scrollX = value;
+    instance.setStyle({
+        "transform": "translateX(" + value + "px)",
+        "transition": "150ms linear 0ms;",
+        "transition-property": "transform;",
+        "transform-origin": "50% 50% 0;"
+    })
+}
+
+module.exports = {
+    touchStart: touchStart,
+    touchMove: touchMove,
+    touchEnd: touchEnd,
+    setScroll: setScroll,
+}

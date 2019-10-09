@@ -1,0 +1,3 @@
+<scroll-view class="box-group" bindscroll="scrolling" catch:touchend="scrollend" scroll-y="{{true}}">
+    <slot />
+</scroll-view>

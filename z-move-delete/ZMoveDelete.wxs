@@ -1,0 +1,96 @@
+/* startX | lastX | lastTimestamp */
+function touchStart(event, ownerInstance) {
+    var instance = event.instance
+
+    var data = instance.getDataset()
+    if (!data.enable) return;
+
+    var touches = event.touches;
+    if (touches.length != 1) return;
+
+    /* ------------------ 存储数据 ------------------ */
+    var state = instance.getState()
+    state.startX = state.lastX = event.touches[0].clientX;
+    state.lastTimestamp = Date.now();
+}
+
+function touchMove(event, ownerInstance) {
+    var instance = event.instance
+
+    /* 是否当前禁止移动 */
+    var dataset = instance.getDataset()
+    if (!dataset.enable) return;
+
+    /* 判断是否是多指 */
+    var touches = event.touches;
+    if (touches.length != 1) return;
+
+    /* 获取存取器 */
+    var state = instance.getState()
+
+    // translateX
+    var translateX = state.translateX || 0;
+    translateX = touches[0].clientX - state.lastX + translateX;
+    instance.setStyle({ "transform": "translateX(" + translateX + "px)" })
+    /* 存储数据 */
+    state.lastX = event.touches[0].clientX
+    state.translateX = translateX;
+
+    // return false;
+}
+
+function touchEnd(event, ownerInstance) {
+    var instance = event.instance
+
+    /* 是否当前禁止移动 */
+    var data = instance.getDataset()
+    if (!data.enable) return;
+
+
+    /* 获取存取器 */
+    var state = instance.getState()
+
+    var deltaX = state.lastX - state.startX
+    var deltaTime = (Date.now() - state.lastTimestamp) / 1000;
+
+    /* 弹窗动画 */
+    if (Math.abs(deltaX / deltaTime) > data.deleteSpeed || Math.abs(deltaX) > data.deleteDistance) {
+        var target = deltaX > 0 ? data.fullWidth : -data.fullWidth;
+        state.translateX = target;
+        instance.setStyle({
+            "transform": "translateX(" + target + "px)",
+            "transition": "200ms linear 0ms;",
+            "transition-property": "transform;",
+            "transform-origin": "50% 50% 0;"
+        })
+        ownerInstance.callMethod("deleteAction");
+        return;
+    }
+
+    /* 重置初始状态 */
+    state.translateX = 0;
+    instance.setStyle({
+        "transform": "translateX(0px)",
+        "transition": "200ms linear 0ms;",
+        "transition-property": "transform;",
+        "transform-origin": "50% 50% 0;"
+    })
+}
+
+function init(newValue, oldValue, ownerInstance, instance) {
+    var state = instance.getState()
+    state.translateX = 0;
+    instance.setStyle({
+        "transform": "translateX(0px)",
+        "transition": "200ms linear 0ms;",
+        "transition-property": "transform;",
+        "transform-origin": "50% 50% 0;"
+    })
+}
+
+module.exports = {
+    touchStart: touchStart,
+    touchMove: touchMove,
+    touchEnd: touchEnd,
+    init: init
+}

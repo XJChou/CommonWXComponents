@@ -1,0 +1,25 @@
+:host {
+    position: relative;
+    width: 100%;
+}
+
+.box-move-menu {
+    display: block;
+    position: relative;
+    width: 100%;
+}
+
+.box-move-menu .box-main {
+    z-index: 2;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.box-move-menu .box-menu {
+    z-index: 1;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}

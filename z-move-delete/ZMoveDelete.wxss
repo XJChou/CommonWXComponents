@@ -1,0 +1,17 @@
+:host {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+.box-slip {
+    position: relative;
+    width: 100%;
+    /* animation */
+    /* transition: 200ms linear 0ms;
+    transition-property: transform;
+    transform-origin: 50% 50% 0;
+    -webkit-transition: 200ms linear 0ms;
+    -webkit-transition-property: transform;
+    -webkit-transform-origin: 50% 50% 0; */
+}

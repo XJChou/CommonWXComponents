@@ -1,0 +1,21 @@
+<wxs module="event" src="./ZMoveMenu.wxs" />
+
+<view class="box-move-menu" catch:tap="itemTap" bind:touchstart="itemTouchStart">
+    
+    <!-- 内容 -->
+    <view class="box-main" 
+        change:prop="{{event.setScroll}}" prop="{{scrollX}}" 
+        bind:touchstart="{{event.touchStart}}" 
+        bind:touchmove="{{event.touchMove}}" 
+        bind:touchend="{{event.touchEnd}}" 
+        bind:touchcancel="{{event.touchEnd}}" 
+        data-left-scroll-enable="{{leftScrollEnable && parentAllow}}" 
+        data-menu-width="{{realWidth}}">
+        <slot name="main" />
+    </view>
+
+    <!-- 菜单 -->
+    <view class="box-menu">
+        <slot name="menu" />
+    </view>
+</view>

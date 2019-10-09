@@ -1,0 +1,15 @@
+<wxs module="event" src="./ZMoveDelete.wxs" />
+
+<view class="box-slip" 
+    change:prop="{{event.init}}" prop="{{init}}" 
+    bind:touchstart="{{event.touchStart}}" 
+    bind:touchmove="{{event.touchMove}}" 
+    bind:touchcancel="{{event.touchEnd}}" 
+    bind:touchend="{{event.touchEnd}}" 
+    
+    data-enable="{{enable && parentAllow}}"
+    data-full-width="{{WINDOW_WIDTH}}"
+    data-delete-speed="{{DELETE_SPEED}}"
+    data-delete-distance="{{DELETE_DISTANCE}}">
+    <slot />
+</view>
